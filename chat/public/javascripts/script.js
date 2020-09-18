@@ -1,5 +1,5 @@
 const ws = new WebSocket("ws://localhost:3000");
-
+let formData=""
 ws.onmessage = (msg) => {
   console.log("Sale "+ typeof(msg.data));
   renderMessages(JSON.parse(msg.data));
@@ -12,23 +12,20 @@ const renderMessages = (data) => {
 
 const handleSubmit = (evt) => {
   evt.preventDefault();
-  const message = document.getElementById("message");;
+  const message = document.getElementById("message");
+  console.log(formData)
   
   fetch('http://localhost:3000/chat/api/messages', {
         method: "POST",
-        body: 
+        body: formData
     })
-    .then(response => response)
+    .then(response => response.text())
     .then(data => console.log(data))
   ws.send(message.value);
   message.value = "";
 };
 
 const form = document.getElementById("form");
+formData= new FormData(form)
 
-form.addEventListener("submit", (evt) => {
-  evt.preventDefault();
-  const message = document.getElementById("message");;
-  const formData= new FormData(this)
-
-});
+form.addEventListener("submit",handleSubmit );

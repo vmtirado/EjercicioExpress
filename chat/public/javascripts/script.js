@@ -12,11 +12,11 @@ const renderMessages = (data) => {
 
 const handleSubmit = (evt) => {
   evt.preventDefault();
-  const message = document.getElementById("message");
-  console.log(JSON.parse("algo"));
+  const message = document.getElementById("message");;
+  
   fetch('http://localhost:3000/chat/api/messages', {
         method: "POST",
-        body: JSON.parse(message.value)
+        body: 
     })
     .then(response => response)
     .then(data => console.log(data))
@@ -25,4 +25,10 @@ const handleSubmit = (evt) => {
 };
 
 const form = document.getElementById("form");
-form.addEventListener("submit", handleSubmit);
+
+form.addEventListener("submit", (evt) => {
+  evt.preventDefault();
+  const message = document.getElementById("message");;
+  const formData= new FormData(this)
+
+});

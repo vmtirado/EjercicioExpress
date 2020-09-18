@@ -26,7 +26,15 @@ app.get("/chat/api/messages",(req,res)=>{
 });
 
 // get id 
-
+app.get("/chat/api/messages/:ts",(req,res)=>{
+    //Busca el mensaje 
+    const msg=messages.find(m=> m.ts===req.params.ts)
+    if(!msg){
+        return res.status(404).send("The message with the given ts was not found");
+    }
+    const index=messages.indexOf(msg);
+    res.send(msg);
+});
 //post 
 app.post("/chat/api/messages",(req,res)=>{
     console.log(req);
@@ -51,5 +59,16 @@ app.put("/chat/api/messages",(req,res)=>{
     //Envia la respuesta
     res.send(msg)
 
+});
+
+app.delete("/chat/api/messages/:ts",(req,res)=>{
+    //Busca el mensaje 
+    const msg=messages.find(m=> m.ts===req.params.ts)
+    if(!msg){
+        return res.status(404).send("The message with the given ts was not found");
+    }
+    const index=messages.indexOf(msg);
+    messages.splice(index,1);
+    res.send(msg);
 });
 

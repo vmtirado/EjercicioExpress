@@ -53,9 +53,11 @@ app.get("/chat/api/messages/:ts",(req,res)=>{
 app.post("/chat/api/messages",(req,res)=>{
 
     //Se valida el cuerpo si tiene error se usa deconstruct para guardarlo 
+    
     const { error }=schema.validate(req.body);
     if (error){
         console.log(error);
+        console.log(req);
         return res.status(400).send(error);
     }
     let msg=req.body;

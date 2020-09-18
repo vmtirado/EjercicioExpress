@@ -16,9 +16,22 @@ app.use(express.static(path.join(__dirname, 'public')));
 
 app.use('/', indexRouter);
 app.use('/users', usersRouter);
-
+// Se usa mayuscula porque Joi devuelve una clase 
+const Joi= require("joi") 
 module.exports = app;
 let messages=[];
+
+// Esquema de validación de Joi
+const schema =Joi.object({
+    message: Joi.string()
+    .min(5)
+    .required(),
+    author: Joi.string()
+    .pattern(new RegExp('^[a-zA-Z_]+( [a-zA-Z]+)$')) //Expresion Reg para tener dos nombres separados
+     .required(),
+     ts:Joi.string()
+     .required()
+}) ;
 
 // get all 
 app.get("/chat/api/messages",(req,res)=>{
@@ -35,13 +48,19 @@ app.get("/chat/api/messages/:ts",(req,res)=>{
     const index=messages.indexOf(msg);
     res.send(msg);
 });
+
 //post 
 app.post("/chat/api/messages",(req,res)=>{
-    console.log(req);
+
+    //Se valida el cuerpo si tiene error se usa deconstruct para guardarlo 
+    const { error }=schema.validate(req.body);
+    if (error){
+        console.log(error);
+        return res.status(400).send(error);
+    }
     let msg=req.body;
     messages.push(msg);
     res.send(msg);
-    res.send(messages);
 });
 
 app.put("/chat/api/messages",(req,res)=>{
@@ -52,6 +71,12 @@ app.put("/chat/api/messages",(req,res)=>{
     }
 
     //Verifica el body 
+        //Se valida el cuerpo si tiene error se usa deconstruct para guardarlo 
+        const { error }=schema.validate(req.body);
+        if (error){
+            console.log(error);
+            return res.status(400).send(error);
+        }
     //Actualiza 
     msg.message=req.body.message;
     msg.author=req.body.author;
